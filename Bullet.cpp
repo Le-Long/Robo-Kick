@@ -25,14 +25,16 @@ void Bullet::move()
 {
 	vx = velocity * cos(denta);
 	vy = velocity * sin(denta) - g * A_MOMENT;
+	float v0 = velocity;
 	float road = (velocity*velocity*sin(2 * denta) / g);
+	int time, endTime, startTime = SDL_GetTicks();
 
 	while (!((this->x == Enemy.x && this->y == Enemy.y) || (this->y == Enemy.y - Enemy.height)))
 	{
 		// Calculate magnitudes of response and velocity vectors
 		cout << velocity << endl;
-		float velocity = sqrtf(vx*vx + vy*vy);
-		denta = atan2(vy, vx);
+		float velocity = sqrt(vx*vx + vy*vy);
+		/*denta = atan2(vy, vx);
 		x += velocity * cos(denta) * A_MOMENT;
 		if (y < Gunner.y + (road / 2))
 		{
@@ -44,6 +46,22 @@ void Bullet::move()
 		{
 			y -= g * A_MOMENT*A_MOMENT / 2;
 			vy += g * A_MOMENT;
+			cout << "nua sau";
+		}*/
+
+		endTime = SDL_GetTicks();
+		time = endTime - startTime;
+		x = Gunner.x + v0 * cos(denta) * time;
+		if (y < Gunner.y + (road / 2))
+		{
+			y = SCREEN_WIDTH - v0 * sin(denta) * time - g * time * time / 2;
+			vy = v0 * sin(denta) - g * time;
+			cout << "nua dau";
+		}
+		else
+		{
+			y = SCREEN_WIDTH - g * time * time / 2;
+			vy = g * time;
 			cout << "nua sau";
 		}
 		//Clear old image
