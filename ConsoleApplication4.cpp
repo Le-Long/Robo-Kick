@@ -8,12 +8,15 @@
 #include <iostream>
 #include <string>
 #include "Window.h"
+#include "Character.h"
+#include "Bullet.h"
 
 using namespace std;
 
 extern SDL_Window* gWindow;
-extern SDL_Surface* gScreenSurface;
-extern SDL_Surface* gPNGSurface;
+extern SDL_Renderer* gRenderer;
+extern SDL_Texture* gTexture;
+
 
 int main(int argc, char* args[])
 {
@@ -37,17 +40,42 @@ int main(int argc, char* args[])
 			//Event handler
 			SDL_Event e;
 
+			//loadImage("Untitled-1.png", 0, 0);
+			Character Player1 = Character("Untitled-2.png");
+			Character Player2 = Character("Untitled-3.png");
+			Player1.setPos(570, 390);
+			Player2.setPos(130, 390);
+			Player1.loadObject();
+			Player2.loadObject();
+
+			Bullet Bomb = Bullet(Player2, "Untitled-4.png");
+			Bomb.Enemy = Player1;
+
 			//While application is running
 			while (!quit)
 			{
-				//Handle events on queue
+			//Handle events on queue
 				while (SDL_PollEvent(&e) != 0)
 				{
 					//User requests quit
 					if (e.type == SDL_QUIT)
 					{
 						quit = true;
+						break;
 					}
+
+					Player2.keyEvent(e);
+
+					Bomb.Gunner = Player2;
+					Bomb.setPos(Player2.x, Player2.y);
+					Bomb.keyEvent(e);
+
+					//Clear old image
+					SDL_RenderClear(gRenderer);
+
+					loadImage("abc.png", 0, 0);
+					Player2.loadObject();
+					Player1.loadObject();
 				}
 			}
 		}

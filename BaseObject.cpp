@@ -2,6 +2,11 @@
 #include "BaseObject.h"
 #include "Window.h"
 
+BaseObject::BaseObject()
+{
+	
+}
+
 BaseObject::BaseObject(string pathSet)
 {
 	BaseObject::path = pathSet;
@@ -21,6 +26,17 @@ void BaseObject::loadObject()
 	}
 }
 
+int BaseObject::getWidth()
+{
+	return width;
+}
+
+int BaseObject::getHeight()
+{
+	return height;
+}
+
 BaseObject::~BaseObject()
 {
-}
+	
+}	

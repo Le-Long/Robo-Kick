@@ -1,21 +1,23 @@
 #pragma once
+#include "SDL.h"
+#include "SDL_image.h"
 #include <string>
 using namespace std;
 
 class BaseObject
 {
-private:
-	int x,y;
-	int height, width;
-	string path;
 public:
+	string path;
+	float x,y;
+	int height, width;
+	BaseObject();
 	BaseObject(string pathSet);
 	void setPos(int xSet, int ySet);
 	void loadObject();
 	int getWidth();
 	int getHeight();
 	void virtual move() = 0;
-	void virtual keyEvent() = 0;
+	void virtual keyEvent(SDL_Event mainEvent) = 0;
 	~BaseObject();
 };
 
