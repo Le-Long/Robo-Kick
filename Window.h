@@ -14,7 +14,7 @@ const int SCREEN_HEIGHT = 480;
 bool init();
 
 //Image test and apply to surface
-bool loadImage(string path, int x, int y);
+bool loadImage(SDL_Texture* texture, int x, int y);
 
 //Frees image and shuts down SDL
 void close();

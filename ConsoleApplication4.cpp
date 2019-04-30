@@ -28,7 +28,8 @@ int main(int argc, char* args[])
 	else
 	{
 		//Load background
-		if (!loadImage("abc.png",0,0))
+		gTexture = loadTexture("abc.png");
+		if (!loadImage(gTexture,0,0))
 		{
 			printf("Failed to load background!\n");
 		}
@@ -48,8 +49,8 @@ int main(int argc, char* args[])
 			Player1.loadObject();
 			Player2.loadObject();
 
-			Bullet Bomb = Bullet(Player2, "Untitled-4.png");
-			Bomb.Enemy = Player1;
+			Bullet Bomb2 = Bullet(Player2, "Untitled-4.png");
+			Bomb2.Enemy = Player1;
 
 			//While application is running
 			while (!quit)
@@ -66,14 +67,14 @@ int main(int argc, char* args[])
 
 					Player2.keyEvent(e);
 
-					Bomb.Gunner = Player2;
-					Bomb.setPos(Player2.x, Player2.y);
-					Bomb.keyEvent(e);
+					Bomb2.Gunner = Player2;
+					Bomb2.setPos(Player2.x, Player2.y);
+					Bomb2.keyEvent(e);
 
-					//Clear old image
-					SDL_RenderClear(gRenderer);
+					//Update screen
+					SDL_RenderPresent(gRenderer);
 
-					loadImage("abc.png", 0, 0);
+					loadImage(gTexture, 0, 0);
 					Player2.loadObject();
 					Player1.loadObject();
 				}
@@ -81,6 +82,7 @@ int main(int argc, char* args[])
 		}
 	}
 	//Free resources and close SDL
+	SDL_Delay(3000);
 	close();
 
 	return 0;

@@ -26,30 +26,30 @@ void Bullet::move()
 	vx = velocity * cos(denta);
 	vy = velocity * sin(denta) - g * A_MOMENT;
 	float v0 = velocity;
-	float road = (velocity*velocity*sin(2 * denta) / g);
+	float yMax = (velocity*velocity*sin(denta)*sin(denta) / (2*g));
 	int time, endTime, startTime = SDL_GetTicks();
 
 	while (!((this->x == Enemy.x && this->y == Enemy.y) || (this->y == Enemy.y - Enemy.height)))
 	{
 		// Calculate magnitudes of response and velocity vectors
-		cout << velocity << endl;
+		cout << "luc" << velocity << endl << "goc" << denta << endl;
 		float velocity = sqrt(vx*vx + vy*vy);
-		/*denta = atan2(vy, vx);
+		denta = atan2(vy, vx);
 		x += velocity * cos(denta) * A_MOMENT;
-		if (y < Gunner.y + (road / 2))
+		if (y < Gunner.y + (yMax + y))
 		{
-			y += velocity * sin(denta) * A_MOMENT - g * A_MOMENT*A_MOMENT / 2;
+			y -= velocity * sin(denta) * A_MOMENT - g * A_MOMENT*A_MOMENT / 2;
 			vy -= g * A_MOMENT;
 			cout << "nua dau";
 		}
 		else
 		{
-			y -= g * A_MOMENT*A_MOMENT / 2;
+			y += g * A_MOMENT*A_MOMENT / 2;
 			vy += g * A_MOMENT;
 			cout << "nua sau";
-		}*/
+		}
 
-		endTime = SDL_GetTicks();
+		/*endTime = SDL_GetTicks();
 		time = endTime - startTime;
 		x = Gunner.x + v0 * cos(denta) * time;
 		if (y < Gunner.y + (road / 2))
@@ -63,14 +63,15 @@ void Bullet::move()
 			y = SCREEN_WIDTH - g * time * time / 2;
 			vy = g * time;
 			cout << "nua sau";
-		}
+		}*/
 		//Clear old image
-		SDL_RenderClear(gRenderer);
+		//SDL_RenderClear(gRenderer);
 
-		loadImage("abc.png", 0, 0);
+		SDL_RenderPresent(gRenderer);
+		loadImage(gTexture, 0, 0);
 		Gunner.loadObject();
-		Enemy.loadObject();
-		this->loadObject();
+		Enemy.loadObject(); cout << "load" << endl;
+		this->loadObject(); cout << "endload" << endl;
 	}
 
 	
@@ -93,6 +94,8 @@ void Bullet::move()
 		// No collision so update objects position
 		x = potentialX;
 		y = potentialY;
+		velocity = 0;
+		check_force = 0;
 	}
 }
 
@@ -112,7 +115,7 @@ void Bullet::keyEvent(SDL_Event events)
 			check_force = true;
 			if (velocity < 3) // lực max = 30
 			{
-				velocity += 0.1; // dí liệt thì cái này sẽ tăng lên
+				velocity +=0.1; // dí liệt thì cái này sẽ tăng lên
 			}
 			else velocity = 3;
 			cout << velocity << endl;
@@ -129,18 +132,17 @@ void Bullet::keyEvent(SDL_Event events)
 		break;
 		case SDLK_UP:// nhập góc
 		{
-			if (denta < 3.14/2 - 0.2) // denta max 
+			if (denta < 3.14-0.2) // denta max 
 			{
 				denta += 0.2;
 			}
-			else denta = 3.14/2;
+			else denta = 3.14;
 			cout << denta << endl;
 		}
 		}
 	}
 	else if (events.type == SDL_KEYUP)
 	{
-		cout << 20 << endl;
 		if (check_force == true) // nhả từ phím cách 
 		{
 			check_get_force = true;
@@ -161,6 +163,8 @@ void Bullet::collide()
 		Enemy.x -= (Enemy.x - x);
 	x = potentialX;
 	y = potentialY;
+	velocity = 0;
+	check_force = 0;
 }
 
 Bullet::~Bullet()

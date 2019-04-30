@@ -9,7 +9,9 @@ class BaseObject
 public:
 	string path;
 	float x,y;
+	SDL_Texture* texture = NULL;
 	int height, width;
+
 	BaseObject();
 	BaseObject(string pathSet);
 	void setPos(int xSet, int ySet);

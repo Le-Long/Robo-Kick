@@ -10,6 +10,7 @@ BaseObject::BaseObject()
 BaseObject::BaseObject(string pathSet)
 {
 	BaseObject::path = pathSet;
+	texture = loadTexture(path);
 }
 
 void BaseObject::setPos(int xSet, int ySet)
@@ -20,7 +21,7 @@ void BaseObject::setPos(int xSet, int ySet)
 
 void BaseObject::loadObject()
 {
-	if (!loadImage(path,x,y))
+	if (!loadImage(texture,x,y))
 	{
 		printf("Failed to load image!\n");
 	}

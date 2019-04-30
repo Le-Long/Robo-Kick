@@ -41,7 +41,7 @@ bool init()
 		else
 		{
 			//Create renderer for window
-			gRenderer = SDL_CreateRenderer(gWindow, -1, SDL_RENDERER_ACCELERATED);
+			gRenderer = SDL_CreateRenderer(gWindow, -1, SDL_RENDERER_ACCELERATED||SDL_RENDERER_PRESENTVSYNC);
 			if (gRenderer == NULL)
 			{
 				printf("Renderer could not be created! SDL Error: %s\n", SDL_GetError());
@@ -66,32 +66,22 @@ bool init()
 	return success;
 }
 
-bool loadImage(string path, int x, int y)
+bool loadImage(SDL_Texture* texture, int x, int y)
 {
 	SDL_Rect pos;
 	pos.x = x;
 	pos.y = y;
-	
-	//Loading success flag
-	bool success = true;
 
-	//Load PNG texture
-	gTexture = loadTexture(path);
-	if (gTexture == NULL)
-	{
-		printf("Failed to load texture image!\n");
-		success = false;
-	}
-	SDL_QueryTexture(gTexture, NULL, NULL, &(pos.w), &(pos.h));
+
+	SDL_QueryTexture(texture, NULL, NULL, &(pos.w), &(pos.h));
 	
 	//Render texture to screen
-	if (x == 0 && y == 0)SDL_RenderCopy(gRenderer, gTexture, NULL, NULL);
-	else SDL_RenderCopy(gRenderer, gTexture, NULL, &pos);
+	if (x == 0 && y == 0)SDL_RenderCopy(gRenderer, texture, NULL, NULL);
+	else SDL_RenderCopy(gRenderer, texture, NULL, &pos);
 
-	//Update screen
-	SDL_RenderPresent(gRenderer);
+	
 
-	return success;
+	return 1;
 }
 
 void close()
@@ -113,9 +103,8 @@ void close()
 
 SDL_Texture* loadTexture(std::string path)
 {
-	//The final texture
-	SDL_Texture* newTexture = NULL;
-
+	
+	SDL_Texture* texture = NULL;
 	//Load image at specified path
 	SDL_Surface* loadedSurface = IMG_Load(path.c_str());
 	if (loadedSurface == NULL)
@@ -128,16 +117,13 @@ SDL_Texture* loadTexture(std::string path)
 		SDL_SetColorKey(loadedSurface, SDL_TRUE, color_key);
 
 		//Create texture from surface pixels
-		newTexture = SDL_CreateTextureFromSurface(gRenderer, loadedSurface);
-		if (newTexture == NULL)
+		texture = SDL_CreateTextureFromSurface(gRenderer, loadedSurface);
+		if (texture == NULL)
 		{
-			printf("Unable to create texture from %s! SDL Error: %s\n", path.c_str(), SDL_GetError());
+			printf("Unable to create texture from %s! SDL Error: %s\n", SDL_GetError());
 		}
-
-		//Get rid of old loaded surface
-		SDL_FreeSurface(loadedSurface);
 	}
 
-	return newTexture;
+	return texture;
 }
 

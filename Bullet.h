@@ -3,9 +3,10 @@
 #include "Character.h"
 
 const int AFFECT_RADIANT = 50;
-const float A_MOMENT = 0.1;
+const float A_MOMENT = 3;
 const int g = 2;
 
+extern SDL_Texture* gTexture;
 extern SDL_Renderer* gRenderer;
 
 class Bullet :
