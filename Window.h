@@ -7,7 +7,7 @@
 using namespace std;
 
 //Screen dimension constants
-const int SCREEN_WIDTH = 700;
+const int SCREEN_WIDTH = 709;
 const int SCREEN_HEIGHT = 480;
 
 //Starts up SDL and creates window

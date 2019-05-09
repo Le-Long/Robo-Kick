@@ -10,6 +10,7 @@
 #include "Window.h"
 #include "Character.h"
 #include "Bullet.h"
+#include <vector>
 
 using namespace std;
 
@@ -17,6 +18,13 @@ extern SDL_Window* gWindow;
 extern SDL_Renderer* gRenderer;
 extern SDL_Texture* gTexture;
 
+void position(SDL_Rect rect, int x, int y, int w, int h) 
+{
+	rect.x = x;
+	rect.y = y;
+	rect.w = w;
+	rect.h = h;
+}
 
 int main(int argc, char* args[])
 {
@@ -40,10 +48,18 @@ int main(int argc, char* args[])
 
 			//Event handler
 			SDL_Event e;
+			
+			SDL_SetRenderDrawColor(gRenderer, 255, 0, 0, 255);
+			SDL_Rect power_point = { 250, 430, 0, 40 },
+				health_bar1 = { 250, 430, 0, 40 },
+				health_bar2 = { 250, 430, 0, 40 },
+				rect1 = { 0,0,4,4 }, rect2 = { 0,0,4,4 };
 
 			//loadImage("Untitled-1.png", 0, 0);
 			Character Player1 = Character("Untitled-2.png");
+			Player1.side = 1;
 			Character Player2 = Character("Untitled-3.png");
+			Player2.side = 0;
 			Player1.setPos(570, 390);
 			Player2.setPos(130, 390);
 			Player1.loadObject();
@@ -51,11 +67,30 @@ int main(int argc, char* args[])
 
 			Bullet Bomb2 = Bullet(Player2, "Untitled-4.png");
 			Bomb2.Enemy = Player1;
+			Bullet Bomb1 = Bullet(Player1, "Untitled-4.png");
+			Bomb1.Enemy = Player2;
+			float denta_point_x = Player2.x, 
+				denta_point_y = Player2.y ;
+
+			if (Player2.side == 0)
+				Bomb2.sign = 1;
+			else
+				Bomb2.sign = -1;
+			Bomb2.point_x = Player2.x + 15 + 15.0 * Bomb2.sign;
+			Bomb2.point_y = Player2.y + Player2.height;
+			if (Player1.side == 0)
+				Bomb1.sign = 1;
+			else
+				Bomb1.sign = -1;
+			Bomb1.point_x = Player1.x + 15 + 15.0 * Bomb1.sign;
+			Bomb1.point_y = Player1.y + Player1.height;
+
+			char step = 'q';
 
 			//While application is running
 			while (!quit)
 			{
-			//Handle events on queue
+				//Handle events on queue
 				while (SDL_PollEvent(&e) != 0)
 				{
 					//User requests quit
@@ -64,90 +99,93 @@ int main(int argc, char* args[])
 						quit = true;
 						break;
 					}
+					//SDL_RenderPresent(gRenderer);
+					if (e.key.keysym.sym == 'p') step = 'p';
 
-					Player2.keyEvent(e);
+					if (step == 'q') 
+						SDL_RenderPresent(gRenderer);
 
-					Bomb2.Gunner = Player2;
-					Bomb2.setPos(Player2.x, Player2.y);
-					Bomb2.keyEvent(e);
+					if (step == 'p')
+					{
+						if (!Bomb2.died)
+						{
+							Player2.keyEvent(e);
+							if (Player2.side == 0 && Player2.x_val != 0) {
+								Bomb2.sign = 1;
+								Bomb2.point_x = Player2.x + 15 + 15.0 * Bomb2.sign;
+								Bomb2.point_y = Player2.y + Player2.height;
+							}
+							else if (Player2.side == 1 && Player2.x_val != 0) {
+								Bomb2.sign = -1;
+								Bomb2.point_x = Player2.x + 15 + 15.0 * Bomb2.sign;
+								Bomb2.point_y = Player2.y + Player2.height;
+							}
+							
+							Bomb2.setPos(Player2.x, Player2.y);
+							Bomb2.keyEvent(e);
+							if (Bomb2.died) Bomb1.died = 0;
 
-					//Update screen
-					SDL_RenderPresent(gRenderer);
+							if (Bomb2.velocity != 0)
+								power_point.w = Bomb2.velocity * 8;
+							/*if (Bomb2.Gunner.HP != 10)
+								health_bar2.w = Bomb2.Gunner.HP * 3;*/
+							
+							rect2.x = Bomb2.point_x;
+							rect2.y = Bomb2.point_y;
+							
+						}
+						else
+						{
+							Player1.keyEvent(e);
+							
+							if (Player1.side == 0 && Player1.x_val != 0) {
+								Bomb1.sign = 1;
+								Bomb1.point_x = Player1.x + 15 + 15.0 * Bomb1.sign;
+								Bomb1.point_y = Player1.y + Player1.height;
+							}
+							else if (Player1.side == 1 && Player1.x_val != 0) {
+								Bomb1.sign = -1;
+								Bomb1.point_x = Player1.x + 15 + 15.0 * Bomb1.sign;
+								Bomb1.point_y = Player1.y + Player1.height;
+							}
 
-					loadImage(gTexture, 0, 0);
-					Player2.loadObject();
-					Player1.loadObject();
+							Bomb1.setPos(Player1.x, Player1.y);
+							Bomb1.keyEvent(e);
+							if (Bomb1.died) Bomb2.died = 0;
+
+							if (Bomb1.velocity != 0)
+								power_point.w = Bomb1.velocity * 8;
+							rect1.x = Bomb1.point_x;
+							rect1.y = Bomb1.point_y;
+						}
+						
+
+						//Update screen
+						SDL_RenderPresent(gRenderer);
+
+						loadImage(gTexture, 0, 0);
+						Player2.loadObject();
+						Player1.loadObject();
+
+						SDL_RenderFillRect(gRenderer, &power_point);
+						SDL_RenderFillRect(gRenderer, &rect1);
+						SDL_RenderFillRect(gRenderer, &rect2);
+						//SDL_RenderFillRect(gRenderer, &health_bar1);
+						//SDL_RenderFillRect(gRenderer, &health_bar2);
+						cout << denta_point_x << ' ' << denta_point_y << endl;
+						
+					}
 				}
 			}
 		}
-	}
+	}//
 	//Free resources and close SDL
-	SDL_Delay(3000);
 	close();
-
 	return 0;
 }
 
-/* int main()
-{
-	SDL_Window* window = NULL;
-	SDL_Event mainEvent;
-	bool isRunning = true;
-	
-	if (SDL_Init(SDL_INIT_EVERYTHING) < 0)
-	{
-		printf("Unable to initialize SDL %s\n", SDL_GetError());
-		return -1;
-	}
-	else
-	{
-		window = SDL_CreateWindow("SDL", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 640, SDL_WINDOW_SHOWN);
-		if (window == NULL)
-		{
-			printf("Could not create window %s\n", SDL_GetError());
-			return -1;
-		}
-		else
-		{
-			int imgFlags = IMG_INIT_PNG;
-			if (!(IMG_Init(imgFlags) & imgFlags))
-			{
-				printf("SDL_image could not initialize! SDL_image Error: %s\n", IMG_GetError());
-				isRunning = false;
-			}
-			else
-			{
-				//Get window surface
-				ScreenSurface = SDL_GetWindowSurface(window);
-			}
-		}
-	}
-	
 
-	while (isRunning)
-	{
-		//main event
-		while (SDL_PollEvent(&mainEvent))
-		{
-			switch (mainEvent.type)
-			{
-				//User - requested 
-			case SDL_QUIT:
-			{
-				isRunning = false;
-				break;
-			}
-			default:
-			{
-				break;
-			}
-			}
-		}
-	}
 
-	SDL_DestroyWindow(window);
-	SDL_Quit();
-} */
 
 // Run program: Ctrl + F5 or Debug > Start Without Debugging menu
 // Debug program: F5 or Debug > Start Debugging menu

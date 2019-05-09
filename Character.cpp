@@ -3,16 +3,12 @@
 #include "SDL_image.h"
 #include "Character.h"
 #include "Window.h"
+#include <iostream>
 
 extern SDL_Renderer* gRenderer;
 
 Character::Character()
 {
-	x_val = 0;
-	y_val = 0;
-	height = 10;
-	width = 4;
-	HP = 20;
 }
 
 Character::Character(string path) : BaseObject(path)
@@ -22,6 +18,7 @@ Character::Character(string path) : BaseObject(path)
 	this->path = path;
 	height = 10;
 	width = 4;
+	HP = 100;
 }
 
 void Character::move()
@@ -35,24 +32,38 @@ void Character::move()
 }
 void Character::keyEvent(SDL_Event mainEvent)
 {
+	bool face = side;
 	if (mainEvent.type == SDL_KEYDOWN)
 	{
 		switch (mainEvent.key.keysym.sym)
 		{
 		case SDLK_LEFT:
 			x_val = -width / 2;
+			face = 1;
 			break;
 		case SDLK_RIGHT:
 			x_val = width / 2;
+			face = 0;
 			break;
 		default:
 			x_val = 0;
 			break;
 		}
+		if (face != side) {
+			side = face;
+			if (path == "Untitled-2.png") 
+				path = "Untitled-3.png";
+			else path = "Untitled-2.png";
+			texture = loadTexture(path);
+		}
 		if (x_val != 0) this->move();
 	}
 }
 
+void Character::getShot(int velocity)
+{
+	HP -= velocity;
+}
 
 Character::~Character()
 {

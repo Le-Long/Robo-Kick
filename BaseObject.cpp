@@ -21,6 +21,7 @@ void BaseObject::setPos(int xSet, int ySet)
 
 void BaseObject::loadObject()
 {
+	
 	if (!loadImage(texture,x,y))
 	{
 		printf("Failed to load image!\n");
