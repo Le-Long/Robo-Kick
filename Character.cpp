@@ -19,6 +19,7 @@ Character::Character(string path) : BaseObject(path)
 	height = 10;
 	width = 4;
 	HP = 100;
+	bool moved = 0;
 }
 
 void Character::move()
@@ -55,6 +56,10 @@ void Character::keyEvent(SDL_Event mainEvent)
 				path = "Untitled-3.png";
 			else path = "Untitled-2.png";
 			texture = loadTexture(path);
+		}
+		if (moved) {
+			x_val = 1;
+			moved = 0;
 		}
 		if (x_val != 0) this->move();
 	}

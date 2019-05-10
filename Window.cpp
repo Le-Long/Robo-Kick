@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "Window.h"
-
+#include "iostream"
 
 
 //The window we'll be rendering to
@@ -71,15 +71,16 @@ bool loadImage(SDL_Texture* texture, int x, int y)
 	SDL_Rect pos;
 	pos.x = x;
 	pos.y = y;
-
+	int run;
 
 	SDL_QueryTexture(texture, NULL, NULL, &(pos.w), &(pos.h));
 	
 	//Render texture to screen
-	if (x == 0 && y == 0)SDL_RenderCopy(gRenderer, texture, NULL, NULL);
-	else SDL_RenderCopy(gRenderer, texture, NULL, &pos);
-
-	
+	if (x == 0 && y == 0)
+		run = SDL_RenderCopy(gRenderer, texture, NULL, NULL);
+	else 
+		run = SDL_RenderCopy(gRenderer, texture, NULL, &pos);
+	if (run != 0) std::cout << "Can't coppy" << SDL_GetError() << endl;
 
 	return 1;
 }

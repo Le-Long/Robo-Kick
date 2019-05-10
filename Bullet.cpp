@@ -33,23 +33,24 @@ void Bullet::move()
 	
 	while (!((this->x >= SCREEN_WIDTH) || (this->y <= 0) || (this->x <= 0) || (this->y >= Enemy.y + Enemy.height)))
 	{
-		
+
 		x += vx * A_MOMENT;
 		vy += g * A_MOMENT / 2.0;
 		y += vy * A_MOMENT;
 		velocity = sqrt(vx*vx + vy * vy);
-					
-		
+
+		SDL_RenderClear(gRenderer);
 		loadImage(gTexture, 0, 0);
 		Gunner.loadObject();
-		Enemy.loadObject(); 
-		loadObject(); 
+		Enemy.loadObject();
+		loadObject();
 		SDL_RenderPresent(gRenderer);
 
-		if (((x+width)*sign >= Enemy.x*sign) && (x*sign <= Enemy.x*sign) && (y+height >= Enemy.y) && (y <= Enemy.y))
+		if ((((x + width)*sign >= Enemy.x*sign) && (x*sign <= Enemy.x*sign) && (y + height >= Enemy.y) && (y <= Enemy.y)))
 		{
 			died = true;
-			Enemy.getShot(velocity);
+			Enemy.HP -= velocity*2;
+			cout << "shot " << velocity;
 			collide();
 			break;
 		}
@@ -103,7 +104,7 @@ void Bullet::keyEvent(SDL_Event events)
 			if (denta > 0) // denta min =0
 			{
 				denta -= 10;
-				point_x += sign * 0.2;
+				point_x += sign * 0.9;
 				point_y += 2.6;
 			}
 			else denta = 0;
@@ -132,17 +133,20 @@ void Bullet::keyEvent(SDL_Event events)
 	}
 	if (check_get_force) {
 		move();
-		cout << 25 << endl;
+		
 	}
 }
 
 void Bullet::collide()
 {
 	SDL_Texture *Explosion = loadTexture("Explosion.png");
-	
+	if (x == Gunner.x) {
+		Gunner.HP -= velocity*2;
+	}
 
-	if (Enemy.x - x < AFFECT_RADIANT && Enemy.x - x > 0) {
+	else if (Enemy.x - x < AFFECT_RADIANT && Enemy.x - x > 0) {
 		Enemy.x += AFFECT_RADIANT - (Enemy.x - x);
+		Enemy.moved = 1;
 		if (Enemy.x > SCREEN_WIDTH) {
 			Enemy.HP = 0;
 			Enemy.x = SCREEN_WIDTH - Enemy.width;
@@ -150,19 +154,23 @@ void Bullet::collide()
 		cout << "move" << endl;
 	}
 	else if (x - Enemy.x < AFFECT_RADIANT && x - Enemy.x > 0) {
-		Enemy.x -= AFFECT_RADIANT - (Enemy.x - x);
+		Enemy.x -= AFFECT_RADIANT - (x - Enemy.x);
+		Enemy.moved = 1;
 		if (Enemy.x < 0) {
 			Enemy.HP = 0;
 			Enemy.x = 0;
 		}
 		cout << "move" << endl;
 	}
-	loadImage(Explosion, x - 10 , y - 10);
-	SDL_RenderPresent(gRenderer);
+	SDL_RenderClear(gRenderer);
 	loadImage(gTexture, 0, 0);
+	loadImage(Explosion, x - 10 , y - 10);
 	Gunner.loadObject();
 	Enemy.loadObject();SDL_RenderPresent(gRenderer);
-	SDL_Delay(100);
+	SDL_Delay(200);
+	loadImage(gTexture, 0, 0);
+	Gunner.loadObject();
+	Enemy.loadObject(); SDL_RenderPresent(gRenderer);
 
 	x = potentialX;
 	y = potentialY;

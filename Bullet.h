@@ -2,7 +2,7 @@
 #include "BaseObject.h"
 #include "Character.h"
 
-const float AFFECT_RADIANT = 40;
+const float AFFECT_RADIANT = 100;
 const float A_MOMENT = 0.4;
 const int g = 1;
 //const int RAD = 30;

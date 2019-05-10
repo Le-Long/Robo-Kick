@@ -5,7 +5,7 @@ class Character :
 {
  public:
 	int HP, x_val, y_val;
-	bool side;
+	bool side, moved;
 	Character();
 	Character(string path);
 	void move();
