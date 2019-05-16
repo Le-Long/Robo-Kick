@@ -3,7 +3,7 @@
 #include "Character.h"
 
 const float AFFECT_RADIANT = 100;
-const float A_MOMENT = 0.4;
+const float A_MOMENT = 0.1;
 const int g = 1;
 //const int RAD = 30;
 
@@ -15,7 +15,7 @@ class Bullet :
 {
 public:
 	bool check_force; // check nhấn space hay lên xuống
-	Character Enemy, Gunner;
+	Character *Enemy = NULL, *Gunner = NULL;
 	float velocity, denta, vx, vy,
 		potentialX, potentialY,
 		point_x, point_y;

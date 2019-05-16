@@ -31,7 +31,7 @@ void Bullet::move()
 	vx = sign * velocity * cos(denta2); // v theo x
 	vy = -velocity * sin(denta2); // v theo y
 	
-	while (!((this->x >= SCREEN_WIDTH) || (this->y <= 0) || (this->x <= 0) || (this->y >= Enemy.y + Enemy.height)))
+	while (!((this->x >= SCREEN_WIDTH) || (this->y <= 0) || (this->x <= 0) || (this->y >= Enemy->y + Enemy->height)))
 	{
 
 		x += vx * A_MOMENT;
@@ -41,15 +41,14 @@ void Bullet::move()
 
 		SDL_RenderClear(gRenderer);
 		loadImage(gTexture, 0, 0);
-		Gunner.loadObject();
-		Enemy.loadObject();
 		loadObject();
-		SDL_RenderPresent(gRenderer);
-
-		if ((((x + width)*sign >= Enemy.x*sign) && (x*sign <= Enemy.x*sign) && (y + height >= Enemy.y) && (y <= Enemy.y)))
+		loadPlayer(Gunner, Enemy);
+		
+		if (((x + width) >= Enemy->x) && (x <= (Enemy->x + width)) 
+			&& (y + height <= Enemy->y + AFFECT_RADIANT) && (y + height >= Enemy->y))
 		{
 			died = true;
-			Enemy.HP -= velocity*2;
+			Enemy->getShot(velocity*2);
 			cout << "shot " << velocity;
 			collide();
 			break;
@@ -57,7 +56,7 @@ void Bullet::move()
 	}
 	
 	// Collision occurred
-	if (this->y >= Enemy.y + Enemy.height)
+	if (this->y + height >= Enemy->y + Enemy->height)
 	{
 		died = true;
 		this->collide();
@@ -71,9 +70,7 @@ void Bullet::move()
 		velocity = 0;
 		check_force = 0;
 
-		loadImage(gTexture, 0, 0);
-		Gunner.loadObject();
-		Enemy.loadObject();
+		loadPlayer(Gunner, Enemy);
 	}
 }
 
@@ -140,37 +137,37 @@ void Bullet::keyEvent(SDL_Event events)
 void Bullet::collide()
 {
 	SDL_Texture *Explosion = loadTexture("Explosion.png");
-	if (x == Gunner.x) {
-		Gunner.HP -= velocity*2;
+	if (x >= Gunner->x - AFFECT_RADIANT && x <= Gunner->x + AFFECT_RADIANT) {
+		Gunner->getShot(velocity*5);
 	}
 
-	else if (Enemy.x - x < AFFECT_RADIANT && Enemy.x - x > 0) {
-		Enemy.x += AFFECT_RADIANT - (Enemy.x - x);
-		Enemy.moved = 1;
-		if (Enemy.x > SCREEN_WIDTH) {
-			Enemy.HP = 0;
-			Enemy.x = SCREEN_WIDTH - Enemy.width;
+	else if (Enemy->x - x < AFFECT_RADIANT && Enemy->x - x > 0) {
+		Enemy->x += AFFECT_RADIANT - (Enemy->x - x);
+		Enemy->moved = 1;
+		Enemy->getShot(velocity*(Enemy->x - x) / AFFECT_RADIANT);
+		if (Enemy->x > SCREEN_WIDTH) {
+			Enemy->HP = 0;
+			Enemy->x = SCREEN_WIDTH - Enemy->width;
 		}
 		cout << "move" << endl;
 	}
-	else if (x - Enemy.x < AFFECT_RADIANT && x - Enemy.x > 0) {
-		Enemy.x -= AFFECT_RADIANT - (x - Enemy.x);
-		Enemy.moved = 1;
-		if (Enemy.x < 0) {
-			Enemy.HP = 0;
-			Enemy.x = 0;
+	else if (x - Enemy->x < AFFECT_RADIANT && x - Enemy->x > 0) {
+		Enemy->x -= AFFECT_RADIANT - (x - Enemy->x);
+		Enemy->moved = 1;
+		Enemy->getShot(velocity*(x - Enemy->x) / AFFECT_RADIANT);
+		if (Enemy->x < 0) {
+			Enemy->HP = 0;
+			Enemy->x = 0;
 		}
 		cout << "move" << endl;
 	}
 	SDL_RenderClear(gRenderer);
 	loadImage(gTexture, 0, 0);
 	loadImage(Explosion, x - 10 , y - 10);
-	Gunner.loadObject();
-	Enemy.loadObject();SDL_RenderPresent(gRenderer);
+	loadPlayer(Gunner, Enemy);
 	SDL_Delay(200);
 	loadImage(gTexture, 0, 0);
-	Gunner.loadObject();
-	Enemy.loadObject(); SDL_RenderPresent(gRenderer);
+	loadPlayer(Gunner, Enemy);
 
 	x = potentialX;
 	y = potentialY;

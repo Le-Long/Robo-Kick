@@ -3,6 +3,7 @@
 #include "iostream"
 
 
+
 //The window we'll be rendering to
 SDL_Window* gWindow = NULL;
 
@@ -11,6 +12,15 @@ SDL_Renderer* gRenderer = NULL;
 
 //Current displayed texture
 SDL_Texture* gTexture = NULL;
+
+void loadPlayer(Character* Player1, Character* Player2)
+{
+	Player2->loadObject();
+	Player1->loadObject();
+	
+	//Update screen
+	SDL_RenderPresent(gRenderer);
+}
 
 bool init()
 {

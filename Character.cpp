@@ -20,6 +20,7 @@ Character::Character(string path) : BaseObject(path)
 	width = 4;
 	HP = 100;
 	bool moved = 0;
+	//texture = loadTexture(path);
 }
 
 void Character::move()
