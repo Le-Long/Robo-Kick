@@ -51,13 +51,13 @@ int main(int argc, char* args[])
 				health_bar2 = { 70, 450, 50, 20 },
 				rect1 = { 0,0,4,4 }, rect2 = { 0,0,4,4 };
 
-			Character Player1 = Character("Untitled-2.png");
+			Character Player1 = Character("U-2.png");
 			Player1.side = 1;
-			Character Player2 = Character("Untitled-3.png");
+			Character Player2 = Character("U-3.png");
 			Player2.side = 0;
 			Character Boss = Character("Boss.png");
-			Player1.setPos(570, 390);
-			Player2.setPos(70, 390);
+			Player1.setPos(570, 385);
+			Player2.setPos(70, 385);
 			Boss.setPos(470, 295); 
 			Boss.width = 189; Boss.height = 129;
 			Boss.HP = 300;
@@ -72,13 +72,13 @@ int main(int argc, char* args[])
 				Bomb2.sign = 1;
 			else
 				Bomb2.sign = -1;
-			Bomb2.point_x = Player2.x + 15 + 15.0 * Bomb2.sign;
+			Bomb2.point_x = Player2.x + 12.5 + 20.0 * Bomb2.sign;
 			Bomb2.point_y = Player2.y + Player2.height;
 			if (Player1.side == 0)
 				Bomb1.sign = 1;
 			else
 				Bomb1.sign = -1;
-			Bomb1.point_x = Player1.x + 15 + 15.0 * Bomb1.sign;
+			Bomb1.point_x = Player1.x + 12.5 + 20.0 * Bomb1.sign;
 			Bomb1.point_y = Player1.y + Player1.height;
 
 			char step = 'q';
@@ -95,7 +95,14 @@ int main(int argc, char* args[])
 						quit = true;
 						break;
 					}
-					//SDL_RenderPresent(gRenderer);
+
+					int mouse_x, mouse_y;
+					SDL_GetMouseState(&mouse_x, &mouse_y);
+					if (mouse_x > 190 && mouse_x < 212 && mouse_y < 228 && mouse_y > 199 
+						&& e.type == SDL_MOUSEBUTTONDOWN) step = 'p';
+					else if (mouse_x > 100 && mouse_x < 120 && mouse_y < 135 && mouse_y > 125
+						&& e.type == SDL_MOUSEBUTTONDOWN) step = 'e';
+
 					if (e.key.keysym.sym == 'p')
 						step = 'p';
 					else if (e.key.keysym.sym == 'e')
@@ -112,6 +119,7 @@ int main(int argc, char* args[])
 						else if (!Bomb2.died)
 						{
 							Player2.keyEvent(e);
+
 							Bomb2.Gunner = &Player2;
 							Bomb2.Enemy = &Player1;
 							playerControl(&Player2, &Bomb2);
@@ -202,11 +210,10 @@ int main(int argc, char* args[])
 						else health_bar2.w = 0;
 
 						loadImage(gTexture, 0, 0);
-						Boss.loadObject();
 						Fire_x = Boss.x - Fire_length - 2*(300 - Boss.HP);
 						if (Fire_x <= 0) Fire_x = 0;
 						if (fire) loadImage(Fire, Fire_x, Player2.y - 20);
-						Player2.loadObject();
+						if (!testHP(Boss, Player2, 1)) goto MENU;
 
 						SDL_RenderFillRect(gRenderer, &power_point);
 						SDL_RenderFillRect(gRenderer, &rect1);
@@ -215,13 +222,11 @@ int main(int argc, char* args[])
 						SDL_RenderFillRect(gRenderer, &health_bar2);
 
 						//Update screen
-						SDL_RenderPresent(gRenderer);
+						loadPlayer(&Boss, &Player2);
 
 						if (fire) SDL_Delay(300);
 						loadImage(gTexture, 0, 0);
-						Boss.loadObject();
-						Player2.loadObject();
-
+						
 						SDL_RenderFillRect(gRenderer, &power_point);
 						SDL_RenderFillRect(gRenderer, &rect1);
 						SDL_RenderFillRect(gRenderer, &rect2);
@@ -229,9 +234,9 @@ int main(int argc, char* args[])
 						SDL_RenderFillRect(gRenderer, &health_bar2);
 
 						//Update screen
-						SDL_RenderPresent(gRenderer);
+						loadPlayer(&Boss, &Player2);
 
-						if (!testHP(Boss, Player2, 1)) goto MENU;
+						
 					}
 				}
 			}

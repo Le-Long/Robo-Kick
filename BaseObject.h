@@ -13,7 +13,6 @@ public:
 	int height, width;
 
 	BaseObject();
-	BaseObject(string pathSet);
 	void setPos(int xSet, int ySet);
 	void loadObject();
 	int getWidth();

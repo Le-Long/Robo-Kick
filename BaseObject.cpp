@@ -7,12 +7,6 @@ BaseObject::BaseObject()
 	
 }
 
-BaseObject::BaseObject(string pathSet)
-{
-	BaseObject::path = pathSet;
-	texture = loadTexture(path);
-}
-
 void BaseObject::setPos(int xSet, int ySet)
 {
 	x = xSet;

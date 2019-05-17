@@ -144,7 +144,7 @@ void Bullet::collide()
 	else if (Enemy->x - x < AFFECT_RADIANT && Enemy->x - x > 0) {
 		Enemy->x += AFFECT_RADIANT - (Enemy->x - x);
 		Enemy->moved = 1;
-		Enemy->getShot(velocity*(Enemy->x - x) / AFFECT_RADIANT);
+		Enemy->getShot(velocity*(Enemy->x - x) / (2.0*AFFECT_RADIANT));
 		if (Enemy->x > SCREEN_WIDTH) {
 			Enemy->HP = 0;
 			Enemy->x = SCREEN_WIDTH - Enemy->width;
@@ -154,7 +154,7 @@ void Bullet::collide()
 	else if (x - Enemy->x < AFFECT_RADIANT && x - Enemy->x > 0) {
 		Enemy->x -= AFFECT_RADIANT - (x - Enemy->x);
 		Enemy->moved = 1;
-		Enemy->getShot(velocity*(x - Enemy->x) / AFFECT_RADIANT);
+		Enemy->getShot(velocity*(x - Enemy->x) / (2.0*AFFECT_RADIANT));
 		if (Enemy->x < 0) {
 			Enemy->HP = 0;
 			Enemy->x = 0;

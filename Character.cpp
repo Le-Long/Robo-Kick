@@ -11,7 +11,7 @@ Character::Character()
 {
 }
 
-Character::Character(string path) : BaseObject(path)
+Character::Character(string path) : BaseObject()
 {
 	x_val = 0;
 	y_val = 0;
@@ -20,11 +20,20 @@ Character::Character(string path) : BaseObject(path)
 	width = 4;
 	HP = 100;
 	bool moved = 0;
-	//texture = loadTexture(path);
+	texture = loadTexture(path);
 }
 
 void Character::move()
 {
+	if (path == "U-3.png")
+		path = "U-5.png";
+	else if (path == "U-5.png")
+		path = "U-3.png";
+	else if (path == "U-2.png")
+		path = "U-4.png";
+	else if (path == "U-4.png")
+		path = "U-2.png";
+	texture = loadTexture(path);
 	x += x_val;
 	if (x < 0 || x + width > SCREEN_WIDTH)
 	{
@@ -53,9 +62,9 @@ void Character::keyEvent(SDL_Event mainEvent)
 		}
 		if (face != side) {
 			side = face;
-			if (path == "Untitled-2.png") 
-				path = "Untitled-3.png";
-			else path = "Untitled-2.png";
+			if (path == "U-2.png" || path == "U-4.png") 
+				path = "U-3.png";
+			else path = "U-2.png";
 			texture = loadTexture(path);
 		}
 		if (moved) {
