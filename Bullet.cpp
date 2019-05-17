@@ -44,18 +44,17 @@ void Bullet::move()
 		loadObject();
 		loadPlayer(Gunner, Enemy);
 		
-		if (((x + width) >= Enemy->x) && (x <= (Enemy->x + width)) 
-			&& (y + height <= Enemy->y + AFFECT_RADIANT) && (y + height >= Enemy->y))
-		{
-			died = true;
-			Enemy->getShot(velocity*2);
-			cout << "shot " << velocity;
-			collide();
-			break;
-		}
 	}
 	
 	// Collision occurred
+	if (((x + width) >= Enemy->x) && (x <= (Enemy->x + width))
+		&& (y + height <= Enemy->y + AFFECT_RADIANT) && (y + height >= Enemy->y))
+	{
+		died = true;
+		Enemy->getShot(velocity * 2);
+		collide();
+	}
+
 	if (this->y + height >= Enemy->y + Enemy->height)
 	{
 		died = true;
@@ -149,7 +148,6 @@ void Bullet::collide()
 			Enemy->HP = 0;
 			Enemy->x = SCREEN_WIDTH - Enemy->width;
 		}
-		cout << "move" << endl;
 	}
 	else if (x - Enemy->x < AFFECT_RADIANT && x - Enemy->x > 0) {
 		Enemy->x -= AFFECT_RADIANT - (x - Enemy->x);
@@ -159,7 +157,6 @@ void Bullet::collide()
 			Enemy->HP = 0;
 			Enemy->x = 0;
 		}
-		cout << "move" << endl;
 	}
 	SDL_RenderClear(gRenderer);
 	loadImage(gTexture, 0, 0);

@@ -30,7 +30,8 @@ int main(int argc, char* args[])
 	{
 		MENU:
 		//Load background
-		gTexture = loadTexture("Patrollers_Mammoth.png");
+		//gTexture = loadTexture("Patrollers_Mammoth.png");
+		gTexture = loadTexture("ARPGX.png");
 		if (!loadImage(gTexture,0,0))
 		{
 			printf("Failed to load background!\n");
@@ -98,15 +99,11 @@ int main(int argc, char* args[])
 
 					int mouse_x, mouse_y;
 					SDL_GetMouseState(&mouse_x, &mouse_y);
-					if (mouse_x > 190 && mouse_x < 212 && mouse_y < 228 && mouse_y > 199 
+					if (mouse_x > 90 && mouse_x < 225 && mouse_y < 264 && mouse_y > 201
 						&& e.type == SDL_MOUSEBUTTONDOWN) step = 'p';
-					else if (mouse_x > 100 && mouse_x < 120 && mouse_y < 135 && mouse_y > 125
+					else if (mouse_x > 522 && mouse_x < 658 && mouse_y < 262 && mouse_y > 206
 						&& e.type == SDL_MOUSEBUTTONDOWN) step = 'e';
 
-					if (e.key.keysym.sym == 'p')
-						step = 'p';
-					else if (e.key.keysym.sym == 'e')
-						step = 'e';
 					if (step == 'q')
 					{
 						SDL_RenderPresent(gRenderer);
